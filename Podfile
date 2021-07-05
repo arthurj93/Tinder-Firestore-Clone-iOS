@@ -7,5 +7,11 @@ target 'Tinder-iOS-Clone' do
 
   # Pods for Tinder-iOS-Clone
 pod 'SnapKit', '~> 5.0.0'
-
+pod 'IQKeyboardManagerSwift'
+pod 'Firebase/Firestore’
+pod 'Firebase/Auth’
+pod 'Firebase/Storage’
+pod 'Firebase/Core’
+pod 'SDWebImage'
+pod 'JGProgressHUD'
 end
