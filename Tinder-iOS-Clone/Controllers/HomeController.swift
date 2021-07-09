@@ -32,6 +32,16 @@ class HomeController: UIViewController {
 //        fetchUsersFromFirestore()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if Auth.auth().currentUser == nil {
+            let loginController: LoginController = .init()
+            loginController.delegate = self
+            let navController: UINavigationController = .init(rootViewController: loginController)
+            navController.modalPresentationStyle = .fullScreen
+            present(navController, animated: true)
+        }
+    }
 
     fileprivate func fetchCurrentUser() {
         hud.textLabel.text = "Loading"
@@ -70,9 +80,10 @@ class HomeController: UIViewController {
             snapshot?.documents.forEach({ (documentSnapshot) in
                 let userDictionary = documentSnapshot.data()
                 let user = User(dictionary: userDictionary)
-                self.cardViewModels.append(user.toCardViewModel())
-                self.lastFetchedUser = user
-                self.setupCardFromUser(user: user)
+                if user.uid != Auth.auth().currentUser?.uid {
+                    self.lastFetchedUser = user
+                    self.setupCardFromUser(user: user)
+                }
             })
         }
     }
@@ -80,6 +91,7 @@ class HomeController: UIViewController {
     fileprivate func setupCardFromUser(user: User) {
         let cardView = CardView(frame: .zero)
         cardView.cardViewModel = user.toCardViewModel()
+        cardView.delegate = self
         cardsDeckView.addSubview(cardView)
         cardsDeckView.sendSubviewToBack(cardView)
         cardView.snp.makeConstraints {
@@ -95,16 +107,16 @@ class HomeController: UIViewController {
         present(navController, animated: true, completion: nil)
     }
     
-    fileprivate func setupFirestoreUserCards() {
-        cardViewModels.forEach { cardViewModel in
-            let cardView = CardView(frame: .zero)
-            cardView.cardViewModel = cardViewModel
-            cardsDeckView.addSubview(cardView)
-            cardView.snp.makeConstraints {
-                $0.top.trailing.bottom.leading.equalToSuperview()
-            }
-        }
-    }
+//    fileprivate func setupFirestoreUserCards() {
+//        cardViewModels.forEach { cardViewModel in
+//            let cardView = CardView(frame: .zero)
+//            cardView.cardViewModel = cardViewModel
+//            cardsDeckView.addSubview(cardView)
+//            cardView.snp.makeConstraints {
+//                $0.top.trailing.bottom.leading.equalToSuperview()
+//            }
+//        }
+//    }
 
     // MARK:- Fileprivate
     
@@ -128,3 +140,17 @@ extension HomeController: SettingsControllerDelegate {
     }
 }
 
+extension HomeController: LoginControllerDelegate {
+    func didFinishLoggingIn() {
+        fetchCurrentUser()
+    }
+}
+
+extension HomeController: CardViewDelegate {
+    func presentInfoController(cardViewModel: CardViewModel) {
+        let userDetailsController: UserDetailsController = .init()
+        userDetailsController.modalPresentationStyle = .fullScreen
+        userDetailsController.cardViewModel = cardViewModel
+        present(userDetailsController, animated: true)
+    }
+}

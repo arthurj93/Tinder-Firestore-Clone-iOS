@@ -8,19 +8,27 @@
 import UIKit
 import SDWebImage
 
+protocol CardViewDelegate: class {
+    func presentInfoController(cardViewModel: CardViewModel)
+}
+
 class CardView: UIView {
+
+    //MARK:- Variables
+
+    weak var delegate: CardViewDelegate?
 
     var cardViewModel: CardViewModel! {
         didSet {
 
-            let imageName = cardViewModel.imageNames.first ?? ""
+            let imageName = cardViewModel.imageUrls.first ?? ""
             if let url = URL(string: imageName) {
                 imageView.sd_setImage(with: url)
             }
             informationLabel.attributedText = cardViewModel.attributedString
             informationLabel.textAlignment = cardViewModel.textAlignment
 
-            (0..<cardViewModel.imageNames.count).forEach { _ in
+            (0..<cardViewModel.imageUrls.count).forEach { _ in
                 let barView = UIView()
                 barView.backgroundColor = barDeselectedColor
                 barsStackView.addArrangedSubview(barView)
@@ -29,6 +37,31 @@ class CardView: UIView {
 
             setupImageIndexObserver()
         }
+    }
+
+    var imageIndex = 0
+    let barDeselectedColor: UIColor = .init(white: 0, alpha: 0.1)
+    private let imageView = UIImageView(image:  #imageLiteral(resourceName: "lady5c"))
+    private let gradientLayer: CAGradientLayer = .init()
+    private let informationLabel = UILabel()
+    let threshold: CGFloat = 100
+    let barsStackView = UIStackView()
+    let moreInfoButton: UIButton = {
+        let button: UIButton = .init(type: .system)
+        button.setImage(#imageLiteral(resourceName: "info_icon"), for: .normal)
+        button.addTarget(self, action: #selector(handleMoreInfo), for: .touchUpInside)
+        return button
+    }()
+
+    //MARK:- Setup
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupLayout()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     fileprivate func setupImageIndexObserver() {
@@ -41,15 +74,6 @@ class CardView: UIView {
             }
             self?.barsStackView.arrangedSubviews[index].backgroundColor = .white
         }
-    }
-    private let imageView = UIImageView(image: #imageLiteral(resourceName: "lady5c"))
-    private let gradientLayer: CAGradientLayer = .init()
-    private let informationLabel = UILabel()
-    let threshold: CGFloat = 100
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupLayout()
     }
 
     func setupLayout() {
@@ -77,22 +101,16 @@ class CardView: UIView {
         addGestureRecognizer(panGesture)
         let tapGesture: UITapGestureRecognizer = .init(target: self, action: #selector(handleTap))
         addGestureRecognizer(tapGesture)
-    }
 
-    var imageIndex = 0
-    let barDeselectedColor: UIColor = .init(white: 0, alpha: 0.1)
-
-    @objc func handleTap(gesture: UITapGestureRecognizer) {
-        let tapLocation = gesture.location(in: nil)
-        let shouldAdvanceNextPhoto = tapLocation.x > frame.width / 2 ? true : false
-        if shouldAdvanceNextPhoto {
-            cardViewModel.advanceToNextPhoto()
-        } else {
-            cardViewModel.goToPreviousPhoto()
+        addSubview(moreInfoButton)
+        moreInfoButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(16)
+            $0.bottom.equalToSuperview().inset(16)
+            $0.height.equalTo(44)
+            $0.width.equalTo(44)
         }
     }
 
-    let barsStackView = UIStackView()
     func setupBarsStackView() {
         addSubview(barsStackView)
         barsStackView.snp.makeConstraints {
@@ -114,6 +132,18 @@ class CardView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         gradientLayer.frame = self.frame
+    }
+
+    //MARK:- Functions
+
+    @objc func handleTap(gesture: UITapGestureRecognizer) {
+        let tapLocation = gesture.location(in: nil)
+        let shouldAdvanceNextPhoto = tapLocation.x > frame.width / 2 ? true : false
+        if shouldAdvanceNextPhoto {
+            cardViewModel.advanceToNextPhoto()
+        } else {
+            cardViewModel.goToPreviousPhoto()
+        }
     }
     
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
@@ -157,9 +187,9 @@ class CardView: UIView {
         let rotationalTransformation = CGAffineTransform(rotationAngle: angle)
         self.transform = rotationalTransformation.translatedBy(x: translation.x, y: translation.y)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+
+    @objc func handleMoreInfo() {
+        delegate?.presentInfoController(cardViewModel: cardViewModel)
     }
 
 }

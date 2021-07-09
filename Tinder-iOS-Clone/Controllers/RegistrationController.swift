@@ -9,22 +9,11 @@ import UIKit
 import Firebase
 import JGProgressHUD
 
-extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let image = info[.originalImage] as? UIImage
-        registrationViewModel.bindableImage.value = image
-        dismiss(animated: true, completion: nil)
-    }
-
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-}
-
 class RegistrationController: UIViewController {
 
-    let registrationViewModel: RegistrationViewModel = .init()  
+    //MARK:- Variables
+    let registrationViewModel: RegistrationViewModel = .init()
+    let registeringHUD = JGProgressHUD(style: .dark)
 
     let selectPhotoButton: UIButton = {
         let button: UIButton = .init(type: .system)
@@ -42,14 +31,8 @@ class RegistrationController: UIViewController {
         return button
     }()
 
-    @objc func handleSelectPhoto() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        present(imagePickerController, animated: true, completion: nil)
-    }
-
     let fullNameTextField: CustomTextField = {
-        let tf = CustomTextField(padding: 24)
+        let tf = CustomTextField(padding: 24, height: 50)
         tf.placeholder = "Enter full name"
         tf.backgroundColor = .white
         tf.autocorrectionType = .no
@@ -58,7 +41,7 @@ class RegistrationController: UIViewController {
     }()
 
     let emailTextField: CustomTextField = {
-        let tf = CustomTextField(padding: 24)
+        let tf = CustomTextField(padding: 24, height: 50)
         tf.placeholder = "Enter email"
         tf.autocorrectionType = .no
         tf.keyboardType = .emailAddress
@@ -68,7 +51,7 @@ class RegistrationController: UIViewController {
     }()
 
     let passwordTextField: CustomTextField = {
-        let tf = CustomTextField(padding: 24)
+        let tf = CustomTextField(padding: 24, height: 50)
         tf.placeholder = "Enter password"
         tf.isSecureTextEntry = true
         tf.backgroundColor = .white
@@ -111,7 +94,18 @@ class RegistrationController: UIViewController {
         verticalStackView
     ])
 
+    let loginButton: UIButton = {
+        let button: UIButton = .init(type: .system)
+        button.setTitle("Go to Login", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .heavy)
+        button.addTarget(self, action: #selector(handleGoToLogin), for: .touchUpInside)
+        return button
+    }()
+
     let gradientLayer = CAGradientLayer()
+
+    //MARK:- Setup
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,10 +121,40 @@ class RegistrationController: UIViewController {
         gradientLayer.frame = view.bounds
     }
 
-    fileprivate func setupRegistrationViewModalObserver() {
+    fileprivate func setupLayout() {
+        navigationController?.isNavigationBarHidden = true
+        view.addSubview(overallStackView)
+        overallStackView.axis = .vertical
+        overallStackView.spacing = 8
+        overallStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(50)
+            $0.trailing.equalToSuperview().inset(50)
+            $0.centerY.equalToSuperview()
+        }
 
+        view.addSubview(loginButton)
+        loginButton.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(view.snp.bottomMargin)
+        }
+    }
+
+    func setupGradientLayer() {
+        let topColor = #colorLiteral(red: 0.9921568627, green: 0.3568627451, blue: 0.3725490196, alpha: 1)
+        let bottomColor = #colorLiteral(red: 0.8980392157, green: 0, blue: 0.4470588235, alpha: 1)
+        gradientLayer.colors = [topColor.cgColor, bottomColor.cgColor]
+        gradientLayer.locations = [0, 1]
+        view.layer.addSublayer(gradientLayer)
+        gradientLayer.frame = view.bounds
+    }
+
+    func setupTapGesture() {
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
+    }
+
+    fileprivate func setupRegistrationViewModalObserver() {
         registrationViewModel.bindableIsFormValid.bind { [weak self] isFormValid in
-            print("Form is changing, is it valid:", isFormValid)
             guard let isFormValid = isFormValid else { return }
             self?.registerButton.isEnabled = isFormValid
             if isFormValid {
@@ -154,10 +178,9 @@ class RegistrationController: UIViewController {
                 self?.registeringHUD.dismiss()
             }
         }
-
     }
 
-    let registeringHUD = JGProgressHUD(style: .dark)
+    //MARK:- Functions
 
     @objc func handleRegister() {
         handleTapDismiss()
@@ -167,7 +190,6 @@ class RegistrationController: UIViewController {
                 self?.showHUDWithError(error: err)
                 return
             }
-
             print("Finished register our user")
         }
     }
@@ -191,38 +213,32 @@ class RegistrationController: UIViewController {
         }
     }
 
-    func setupTapGesture() {
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
-    }
-
     @objc func handleTapDismiss() {
         self.view.endEditing(true)
     }
 
-    fileprivate func setupLayout() {
-        view.addSubview(overallStackView)
-        overallStackView.axis = .vertical
-        overallStackView.spacing = 8
-        overallStackView.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(50)
-            $0.trailing.equalToSuperview().inset(50)
-            $0.centerY.equalToSuperview()
-        }
-
-        if self.traitCollection.verticalSizeClass == .compact {
-            overallStackView.axis = .horizontal
-        } else {
-            overallStackView.axis = .vertical
-        }
+    @objc func handleSelectPhoto() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true, completion: nil)
     }
 
-    func setupGradientLayer() {
-        let topColor = #colorLiteral(red: 0.9921568627, green: 0.3568627451, blue: 0.3725490196, alpha: 1)
-        let bottomColor = #colorLiteral(red: 0.8980392157, green: 0, blue: 0.4470588235, alpha: 1)
-        gradientLayer.colors = [topColor.cgColor, bottomColor.cgColor]
-        gradientLayer.locations = [0, 1]
-        view.layer.addSublayer(gradientLayer)
-        gradientLayer.frame = view.bounds
+    @objc func handleGoToLogin() {
+        let loginController: LoginController = .init()
+        navigationController?.pushViewController(loginController, animated: true)
     }
-
 }
+
+extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[.originalImage] as? UIImage
+        registrationViewModel.bindableImage.value = image
+        dismiss(animated: true, completion: nil)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+}
+

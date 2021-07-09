@@ -100,7 +100,7 @@ class SettingsController: UITableViewController {
         navigationItem.leftBarButtonItem = .init(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItems = [
             .init(title: "Save", style: .plain, target: self, action: #selector(handleSave)),
-            .init(title: "Logout", style: .plain, target: self, action: #selector(handleCancel))
+            .init(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         ]
     }
 
@@ -153,6 +153,12 @@ class SettingsController: UITableViewController {
         dismiss(animated: true, completion: nil)
     }
 
+    @objc func handleLogout() {
+        try? Auth.auth().signOut()
+        dismiss(animated: true) {
+            
+        }
+    }
 
     @objc func handleSelectPhoto(button: UIButton) {
         let imagePicker: CustomImagePickerController = .init()

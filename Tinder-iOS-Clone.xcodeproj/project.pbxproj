@@ -28,6 +28,9 @@
 		5A8F378F2693AD9D0057E6BE /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8F378E2693AD9D0057E6BE /* SettingsCell.swift */; };
 		5A8F37942694EF400057E6BE /* AgeRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8F37932694EF400057E6BE /* AgeRangeCell.swift */; };
 		5A8F37EE26962D7B0057E6BE /* FireBaseUtils+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8F37ED26962D7B0057E6BE /* FireBaseUtils+Extension.swift */; };
+		5A8F37F426963F9A0057E6BE /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8F37F226963F9A0057E6BE /* LoginController.swift */; };
+		5A8F37F526963F9A0057E6BE /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8F37F326963F9A0057E6BE /* LoginViewModel.swift */; };
+		5A8F37FA2697801B0057E6BE /* UserDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8F37F92697801B0057E6BE /* UserDetailsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +57,9 @@
 		5A8F378E2693AD9D0057E6BE /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		5A8F37932694EF400057E6BE /* AgeRangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeRangeCell.swift; sourceTree = "<group>"; };
 		5A8F37ED26962D7B0057E6BE /* FireBaseUtils+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FireBaseUtils+Extension.swift"; sourceTree = "<group>"; };
+		5A8F37F226963F9A0057E6BE /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		5A8F37F326963F9A0057E6BE /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		5A8F37F92697801B0057E6BE /* UserDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsController.swift; sourceTree = "<group>"; };
 		7849441571B77B0121353B04 /* Pods_Tinder_iOS_Clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tinder_iOS_Clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECBFA46F7321757940F0DB8B /* Pods-Tinder-iOS-Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tinder-iOS-Clone.debug.xcconfig"; path = "Target Support Files/Pods-Tinder-iOS-Clone/Pods-Tinder-iOS-Clone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +136,8 @@
 		5A3EFA2E262690BA00D506C1 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5A8F37F826977FF90057E6BE /* User Details */,
+				5A8F37F126963EA20057E6BE /* Login */,
 				5A3EFA152626538200D506C1 /* HomeController.swift */,
 				5A3E0A25266DBEA100D506C1 /* RegistrationController.swift */,
 				5A8F377E269328BC0057E6BE /* Bindable.swift */,
@@ -154,6 +162,23 @@
 				5A548694268DF712007569F3 /* RegistrationViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		5A8F37F126963EA20057E6BE /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				5A8F37F226963F9A0057E6BE /* LoginController.swift */,
+				5A8F37F326963F9A0057E6BE /* LoginViewModel.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		5A8F37F826977FF90057E6BE /* User Details */ = {
+			isa = PBXGroup;
+			children = (
+				5A8F37F92697801B0057E6BE /* UserDetailsController.swift */,
+			);
+			path = "User Details";
 			sourceTree = "<group>";
 		};
 		7C78D721F555D48A6087EF66 /* Frameworks */ = {
@@ -294,15 +319,18 @@
 				5A3EFA1C2626539D00D506C1 /* HomeButtonsStackView.swift in Sources */,
 				5A3EFA862628B15400D506C1 /* Advertiser.swift in Sources */,
 				5A3EFA1D2626539D00D506C1 /* TopNavigationStackView.swift in Sources */,
+				5A8F37FA2697801B0057E6BE /* UserDetailsController.swift in Sources */,
 				5A8F37942694EF400057E6BE /* AgeRangeCell.swift in Sources */,
 				5A3EFA322626910F00D506C1 /* CardViewModel.swift in Sources */,
 				5A3334D22626079500ED7480 /* AppDelegate.swift in Sources */,
 				5A3EFA2A26265A1F00D506C1 /* User.swift in Sources */,
 				5A8F378C2693A56A0057E6BE /* SettingsController.swift in Sources */,
 				5A3334D42626079500ED7480 /* SceneDelegate.swift in Sources */,
+				5A8F37F426963F9A0057E6BE /* LoginController.swift in Sources */,
 				5A3E0A26266DBEA100D506C1 /* RegistrationController.swift in Sources */,
 				5A8F37EE26962D7B0057E6BE /* FireBaseUtils+Extension.swift in Sources */,
 				5A3EFA1B2626539D00D506C1 /* CardView.swift in Sources */,
+				5A8F37F526963F9A0057E6BE /* LoginViewModel.swift in Sources */,
 				5A8F378F2693AD9D0057E6BE /* SettingsCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
