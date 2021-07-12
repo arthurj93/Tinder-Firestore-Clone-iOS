@@ -22,6 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.windowScene = windowScene
         window?.rootViewController = HomeController()
+//        window?.rootViewController = SwipingPhotosController()
 //        window?.rootViewController = RegistrationController()
         window?.makeKeyAndVisible()
     }

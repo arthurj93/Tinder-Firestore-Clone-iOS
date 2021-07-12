@@ -12,11 +12,12 @@ class UserDetailsController: UIViewController {
     var cardViewModel: CardViewModel! {
         didSet {
             infoLabel.attributedText = cardViewModel.attributedString
-            guard let firstImageUrl = cardViewModel.imageUrls.first, let url = URL(string: firstImageUrl) else { return }
-            imageView.sd_setImage(with: url)
+            swipingPhotosController.cardViewModel = cardViewModel
+//            guard let firstImageUrl = cardViewModel.imageUrls.first, let url = URL(string: firstImageUrl) else { return }
+//            imageView.sd_setImage(with: url)
         }
     }
-
+    let extraSwipingHeight: CGFloat = 80
     lazy var scrollView: UIScrollView  = {
         let sv: UIScrollView = .init()
         sv.alwaysBounceVertical = true
@@ -25,12 +26,7 @@ class UserDetailsController: UIViewController {
         return sv
     }()
 
-    let imageView: UIImageView = {
-        let iv: UIImageView = .init(image: #imageLiteral(resourceName: "kelly1"))
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        return iv
-    }()
+    let swipingPhotosController: SwipingPhotosController = .init(transitionStyle: .scroll, navigationOrientation: .horizontal)
 
     let infoLabel: UILabel = {
         let label: UILabel = .init()
@@ -64,19 +60,26 @@ class UserDetailsController: UIViewController {
             $0.leading.trailing.bottom.top.equalToSuperview()
         }
 
-        scrollView.addSubview(imageView)
-        imageView.frame = .init(x: 0, y: 0, width: view.frame.width, height: view.frame.width)
+        let swipingView = swipingPhotosController.view!
+
+        scrollView.addSubview(swipingView)
         scrollView.addSubview(infoLabel)
         infoLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(16)
+            $0.top.equalTo(swipingView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(16)
         }
         scrollView.addSubview(dismissButton)
         dismissButton.snp.makeConstraints {
             $0.trailing.equalTo(view.snp.trailing).inset(24)
-            $0.top.equalTo(imageView.snp.bottom).inset(25)
+            $0.top.equalTo(swipingView.snp.bottom).inset(25)
             $0.width.height.equalTo(50)
         }
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        let swipingView = swipingPhotosController.view!
+        swipingView.frame = .init(x: 0, y: 0, width: view.frame.width, height: view.frame.width + extraSwipingHeight)
     }
 
     fileprivate func setupVisualBlurEffectView() {
@@ -125,6 +128,7 @@ extension UserDetailsController: UIScrollViewDelegate {
         let changeY = -scrollView.contentOffset.y
         var width = view.frame.width + changeY * 2
         width = max(view.frame.width, width)
-        imageView.frame = CGRect(x: min(0, -changeY), y: min(0, -changeY), width: width, height: width)
+        let swipingView = swipingPhotosController.view!
+        swipingView.frame = CGRect(x: min(0, -changeY), y: min(0, -changeY), width: width, height: width)
     }
 }

@@ -23,6 +23,8 @@ class SettingsController: UITableViewController {
 
     //MARK:- Variables
 
+    static let defaultMinSeekingAge = 18
+    static let defaultMaxSeekingAge = 18
     lazy var imageButton1 = createButton(selector: #selector(handleSelectPhoto))
     lazy var imageButton2 = createButton(selector: #selector(handleSelectPhoto))
     lazy var imageButton3 = createButton(selector: #selector(handleSelectPhoto))
@@ -225,8 +227,12 @@ extension SettingsController {
             let ageRangeCell = AgeRangeCell(style: .default, reuseIdentifier: nil)
             ageRangeCell.minSlider.addTarget(self, action: #selector(handleMinAgeChanged), for: .valueChanged)
             ageRangeCell.maxSlider.addTarget(self, action: #selector(handleMaxAgeChanged), for: .valueChanged)
-            ageRangeCell.minLabel.text = "Min \(user?.minSeekingAge ?? -1)"
-            ageRangeCell.maxLabel.text = "Max \(user?.maxSeekingAge ?? -1)"
+            let minAge = user?.minSeekingAge ?? SettingsController.defaultMinSeekingAge
+            let maxAge = user?.maxSeekingAge ?? SettingsController.defaultMaxSeekingAge
+            ageRangeCell.minLabel.text = "Min \(minAge)"
+            ageRangeCell.maxLabel.text = "Max \(maxAge)"
+            ageRangeCell.minSlider.value = Float(minAge)
+            ageRangeCell.maxSlider.value = Float(maxAge)
             return ageRangeCell
         }
         let cell: SettingsCell = .init(style: .default, reuseIdentifier: nil)

@@ -10,6 +10,7 @@ import SDWebImage
 
 protocol CardViewDelegate: class {
     func presentInfoController(cardViewModel: CardViewModel)
+    func didRemoveCard(cardView: CardView)
 }
 
 class CardView: UIView {
@@ -18,13 +19,16 @@ class CardView: UIView {
 
     weak var delegate: CardViewDelegate?
 
+    var nextCardView: CardView?
+
     var cardViewModel: CardViewModel! {
         didSet {
 
-            let imageName = cardViewModel.imageUrls.first ?? ""
-            if let url = URL(string: imageName) {
-                imageView.sd_setImage(with: url)
-            }
+//            let imageName = cardViewModel.imageUrls.first ?? ""
+//            if let url = URL(string: imageName) {
+//                imageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "photo_placeholder"), options: .continueInBackground)
+//            }
+            swipingPhotoController.cardViewModel = self.cardViewModel
             informationLabel.attributedText = cardViewModel.attributedString
             informationLabel.textAlignment = cardViewModel.textAlignment
 
@@ -41,7 +45,8 @@ class CardView: UIView {
 
     var imageIndex = 0
     let barDeselectedColor: UIColor = .init(white: 0, alpha: 0.1)
-    private let imageView = UIImageView(image:  #imageLiteral(resourceName: "lady5c"))
+//    private let imageView = UIImageView(image:  #imageLiteral(resourceName: "photo_placeholder"))
+    private let swipingPhotoController: SwipingPhotosController = .init(transitionStyle: .scroll, navigationOrientation: .horizontal)
     private let gradientLayer: CAGradientLayer = .init()
     private let informationLabel = UILabel()
     let threshold: CGFloat = 100
@@ -58,6 +63,7 @@ class CardView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
+        disableSwipingAbility()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -67,7 +73,7 @@ class CardView: UIView {
     fileprivate func setupImageIndexObserver() {
         cardViewModel.imageIndexObserver = { [weak self] (index, imageUrl) in
             if let url = URL(string: imageUrl ?? "") {
-                self?.imageView.sd_setImage(with: url)
+//                self?.imageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "photo_placeholder"), options: .continueInBackground)
             }
             self?.barsStackView.arrangedSubviews.forEach { v in
                 v.backgroundColor = self?.barDeselectedColor
@@ -77,15 +83,16 @@ class CardView: UIView {
     }
 
     func setupLayout() {
+        let swipingPhotosView = swipingPhotoController.view!
         layer.cornerRadius = 10
         clipsToBounds = true
 
-        addSubview(imageView)
-        imageView.contentMode = .scaleAspectFill
-        imageView.snp.makeConstraints {
+        addSubview(swipingPhotosView)
+//        imageView.contentMode = .scaleAspectFill
+        swipingPhotosView.snp.makeConstraints {
             $0.top.trailing.bottom.leading.equalToSuperview()
         }
-        setupBarsStackView()
+//        setupBarsStackView()
         setupGradientLayer()
 
         addSubview(informationLabel)
@@ -134,6 +141,14 @@ class CardView: UIView {
         gradientLayer.frame = self.frame
     }
 
+    func disableSwipingAbility() {
+        swipingPhotoController.view.subviews.forEach { v in
+            if let v = v as? UIScrollView {
+                v.isScrollEnabled = false
+            }
+        }
+    }
+
     //MARK:- Functions
 
     @objc func handleTap(gesture: UITapGestureRecognizer) {
@@ -160,23 +175,19 @@ class CardView: UIView {
     fileprivate func handleEnded(_ gesture: UIPanGestureRecognizer) {
         let translationDirection: CGFloat = gesture.translation(in: nil).x > 0 ? 1 : -1
         let shouldDismissCard = (gesture.translation(in: nil).x).magnitude > threshold
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut) {
-            if shouldDismissCard {
-//                self.frame = .init(x: 1000, y: 0, width: self.frame.width, height: self.frame.height)
-                ///checkthis
-                let offScreenTransform = self.transform.translatedBy(x: 1000 * translationDirection, y: 0)
-                self.transform = offScreenTransform
+
+        if shouldDismissCard {
+            guard let homeController = self.delegate as? HomeController else { return }
+            if translationDirection == 1 {
+                homeController.handleLike()
             } else {
+                homeController.handleDislike()
+            }
+        } else {
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.1, options: .curveEaseOut) {
                 self.transform = .identity
             }
-        } completion: { (_) in
 
-            self.transform = .identity
-            if shouldDismissCard {
-                self.removeFromSuperview()
-            }
-            ///x
-//            self.frame = .init(x: 0, y: 0, width: self.superview!.frame.width, height: self.superview!.frame.height)
         }
     }
 
