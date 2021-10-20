@@ -14,4 +14,5 @@ pod 'Firebase/Storage’
 pod 'Firebase/Core’
 pod 'SDWebImage'
 pod 'JGProgressHUD'
+pod 'LBTATools', '1.0.4'
 end

@@ -24,7 +24,7 @@ class SettingsController: UITableViewController {
     //MARK:- Variables
 
     static let defaultMinSeekingAge = 18
-    static let defaultMaxSeekingAge = 18
+    static let defaultMaxSeekingAge = 35
     lazy var imageButton1 = createButton(selector: #selector(handleSelectPhoto))
     lazy var imageButton2 = createButton(selector: #selector(handleSelectPhoto))
     lazy var imageButton3 = createButton(selector: #selector(handleSelectPhoto))

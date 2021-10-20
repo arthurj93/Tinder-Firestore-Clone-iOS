@@ -6,8 +6,33 @@
 //
 
 import UIKit
-
+import FirebaseFirestore
 class MatchView: UIView {
+
+    var currentUser: User!
+
+    var cardUID: String! {
+        didSet {
+            let query = Firestore.firestore().collection("users")
+            query.document(cardUID).getDocument { (snapshot, err) in
+                if let err = err {
+                    print("Failed to fetch card user:", err)
+                    return
+                }
+                guard let dictionary = snapshot?.data() else { return }
+                let user: User = .init(dictionary: dictionary)
+                guard let url = URL(string: user.imageUrl1 ?? "") else { return}
+                self.cardUserImageView.sd_setImage(with: url)
+
+                guard let currentUserImageUrl = URL(string: self.currentUser.imageUrl1 ?? "") else { return }
+
+                self.currentUserImageView.sd_setImage(with: currentUserImageUrl) { (_, _, _, _) in
+                    self.setupAnimations()
+                }
+                self.descriptionLabel.text = "You and \(user.name ?? "") have liked\neach other."
+            }
+        }
+    }
 
     let itsAMatchImageView: UIImageView = {
         let iv: UIImageView = .init(image: #imageLiteral(resourceName: "itsamatch"))
@@ -21,6 +46,7 @@ class MatchView: UIView {
         label.textAlignment = .center
         label.textColor = .white
         label.font = .systemFont(ofSize: 18)
+        label.numberOfLines = 0
         return label
     }()
 
@@ -39,6 +65,7 @@ class MatchView: UIView {
         iv.contentMode = .scaleAspectFill
         iv.layer.borderWidth = 2
         iv.layer.borderColor = UIColor.white.cgColor
+        iv.alpha = 0
         return iv
     }()
 
@@ -62,6 +89,7 @@ class MatchView: UIView {
         super.init(frame: frame)
         setupBlurView()
         setupLayout()
+//        setupAnimations()
     }
 
     required init?(coder: NSCoder) {
@@ -83,13 +111,21 @@ class MatchView: UIView {
 
     }
 
+    lazy var views = [
+        itsAMatchImageView,
+        descriptionLabel,
+        currentUserImageView,
+        cardUserImageView,
+        sendMessageButton,
+        keepSwipingButton
+    ]
+
     func setupLayout() {
-        addSubview(currentUserImageView)
-        addSubview(cardUserImageView)
-        addSubview(itsAMatchImageView)
-        addSubview(descriptionLabel)
-        addSubview(sendMessageButton)
-        addSubview(keepSwipingButton)
+        views.forEach { (v) in
+            addSubview(v)
+            v.alpha = 0
+        }
+
         currentUserImageView.layer.cornerRadius = 140 / 2
         currentUserImageView.snp.makeConstraints {
             $0.trailing.equalTo(self.snp.centerX).offset(-16)
@@ -133,6 +169,48 @@ class MatchView: UIView {
             $0.leading.equalToSuperview().inset(48)
             $0.height.equalTo(60)
         }
+    }
+
+    func setupAnimations() {
+        views.forEach({$0.alpha = 1})
+        let angle = 30 * CGFloat.pi / 180
+        currentUserImageView.transform = CGAffineTransform.init(rotationAngle: -angle).concatenating(.init(translationX: 200, y: 0))
+        cardUserImageView.transform = CGAffineTransform.init(rotationAngle: angle).concatenating(.init(translationX: -200, y: 0))
+        sendMessageButton.transform = CGAffineTransform(translationX: -500, y: 0)
+        keepSwipingButton.transform = CGAffineTransform(translationX: 500, y: 0)
+
+        UIView.animateKeyframes(withDuration: 1.3, delay: 0, options: .calculationModeCubic) {
+
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.45) {
+                self.currentUserImageView.transform = CGAffineTransform.init(rotationAngle: -angle)
+                self.cardUserImageView.transform = CGAffineTransform.init(rotationAngle: angle)
+            }
+
+            UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4) {
+                self.currentUserImageView.transform = .identity
+                self.cardUserImageView.transform = .identity
+//                self.sendMessageButton.transform = .identity
+//                self.keepSwipingButton.transform = .identity
+            }
+
+        } completion: { (_) in
+
+        }
+
+        UIView.animate(withDuration: 0.6, delay: 0.6 * 1.3, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.1, options: .curveEaseOut) {
+            self.sendMessageButton.transform = .identity
+            self.keepSwipingButton.transform = .identity
+        } completion: { _ in
+
+        }
+
+//        UIView.animate(withDuration: 0.7) {
+//            self.currentUserImageView.transform = .identity
+//            self.currentUserImageView.transform = .identity
+//        } completion: { (_) in
+//
+//        }
+
     }
 
     @objc func handleDismiss() {

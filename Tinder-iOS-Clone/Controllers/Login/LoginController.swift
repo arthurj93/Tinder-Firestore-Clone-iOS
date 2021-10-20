@@ -63,9 +63,9 @@ class LoginController: UIViewController {
 
     fileprivate let backButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Go back", for: .normal)
+        button.setTitle("Go to Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .heavy)
         button.addTarget(self, action: #selector(handleBack), for: .touchUpInside)
         return button
     }()
@@ -107,7 +107,7 @@ class LoginController: UIViewController {
         view.addSubview(backButton)
         backButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(view.snp_bottomMargin)
+            $0.bottom.equalTo(view.snp_bottomMargin).inset(16)
         }
     }
     
@@ -120,7 +120,7 @@ class LoginController: UIViewController {
         }
         loginViewModel.isLoggingIn.bind { [unowned self] (isRegistering) in
             if isRegistering == true {
-                self.loginHUD.textLabel.text = "Register"
+                self.loginHUD.textLabel.text = "Loading"
                 self.loginHUD.show(in: self.view)
             } else {
                 self.loginHUD.dismiss()
@@ -154,7 +154,9 @@ class LoginController: UIViewController {
     }
 
     @objc fileprivate func handleBack() {
-        navigationController?.popViewController(animated: true)
+        let registerViewController: RegistrationController = .init()
+        navigationController?.pushViewController(registerViewController, animated: true)
+//        navigationController?.popViewController(animated: true)
     }
 
 }

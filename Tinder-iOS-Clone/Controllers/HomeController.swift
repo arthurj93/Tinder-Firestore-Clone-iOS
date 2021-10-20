@@ -16,7 +16,7 @@ class HomeController: UIViewController {
     //MARK:- Variables
     let topStackView = TopNavigationStackView()
     let cardsDeckView = UIView()
-    let bottonControls = HomeButtonsStackView()
+    let bottomControls = HomeButtonsStackView()
     var cardViewModels: [CardViewModel] = []
     var topCardView: CardView?
 
@@ -28,11 +28,13 @@ class HomeController: UIViewController {
     //MARK:- Setup
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
         topStackView.settingsButton.addTarget(self, action: #selector(handleSettings), for: .touchUpInside)
-        bottonControls.refreshButton.addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
-        bottonControls.likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
-        bottonControls.dislikeButton.addTarget(self, action: #selector(handleDislike), for: .touchUpInside)
+        topStackView.messageButton.addTarget(self, action: #selector(handleMessages), for: .touchUpInside)
+        bottomControls.refreshButton.addTarget(self, action: #selector(handleRefresh), for: .touchUpInside)
+        bottomControls.likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
+        bottomControls.dislikeButton.addTarget(self, action: #selector(handleDislike), for: .touchUpInside)
         setupLayout()
         fetchCurrentUser()
     }
@@ -49,7 +51,7 @@ class HomeController: UIViewController {
     }
 
     fileprivate func setupLayout() {
-        let mainStackView = UIStackView(arrangedSubviews: [topStackView, cardsDeckView, bottonControls])
+        let mainStackView = UIStackView(arrangedSubviews: [topStackView, cardsDeckView, bottomControls])
         mainStackView.axis = .vertical
         view.addSubview(mainStackView)
         mainStackView.snp.makeConstraints {
@@ -109,13 +111,8 @@ class HomeController: UIViewController {
     }
 
     func fetchUsersFromFirestore() {
-//        guard let minAge = user?.minSeekingAge, let maxAge = user?.maxSeekingAge else { return }
         let minAge = user?.minSeekingAge ?? SettingsController.defaultMinSeekingAge
         let maxAge = user?.maxSeekingAge ?? SettingsController.defaultMaxSeekingAge
-
-//        let query = Firestore.firestore().collection("users").order(by: "uid").start(after: [lastFetchedUser?.uid ?? ""]).limit(to: 2)
-//        let query = Firestore.firestore().collection("users")
-//        let query = Firestore.firestore().collection("users").whereField("age", isLessThan: 31).whereField("age", isGreaterThan: 23)
         let query = Firestore.firestore().collection("users").whereField("age", isGreaterThanOrEqualTo: minAge).whereField("age", isLessThanOrEqualTo: maxAge)
         topCardView = nil
         query.getDocuments { (snapshot, err) in
@@ -128,11 +125,11 @@ class HomeController: UIViewController {
             snapshot?.documents.forEach({ (documentSnapshot) in
                 let userDictionary = documentSnapshot.data()
                 let user = User(dictionary: userDictionary)
-
+                self.users[user.uid ?? ""] = user
                 let isNotCurrentUser = user.uid != Auth.auth().currentUser?.uid
                 let hasNotSwipedBefore = true
 //                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
-                if  isNotCurrentUser && hasNotSwipedBefore {
+                if isNotCurrentUser && hasNotSwipedBefore {
                     self.lastFetchedUser = user
                     let cardView = self.setupCardFromUser(user: user)
 
@@ -145,6 +142,8 @@ class HomeController: UIViewController {
             })
         }
     }
+
+    var users: [String: User] = .init()
 
     fileprivate func saveSwipeToFirestore(didLike: Int) {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -196,10 +195,22 @@ class HomeController: UIViewController {
             let hasMatched = data[uid] as? Int == 1
             if hasMatched {
                 self.presentMatchView(cardUID: cardUID)
-//                let hud: JGProgressHUD = .init(style: .dark)
-//                hud.textLabel.text = "Found a match"
-//                hud.show(in: self.view)
-//                hud.dismiss(afterDelay: 4)
+                guard let cardUser = self.users[cardUID] else { return }
+                let data = ["name": cardUser.name ?? "", "profileImageUrl": cardUser.imageUrl1 ?? "", "uid": cardUID, "timestamp": Date()] as [String : Any]
+                Firestore.firestore().collection("matches_messages").document(uid).collection("matches").document(cardUID).setData(data) { (err) in
+                    if let err = err {
+                        print("Failed to save match info:", err)
+                    }
+                }
+
+                guard let currentUser = self.user else { return }
+                let otherMatchdata = ["name": currentUser.name ?? "", "profileImageUrl": currentUser.imageUrl1 ?? "", "uid": cardUID, "timestamp": Date()] as [String : Any]
+                Firestore.firestore().collection("matches_messages").document(cardUID).collection("matches").document(uid).setData(otherMatchdata) { (err) in
+                    if let err = err {
+                        print("Failed to save match info:", err)
+                    }
+                }
+
             }
         }
     }
@@ -208,6 +219,8 @@ class HomeController: UIViewController {
 
     func presentMatchView(cardUID: String) {
         let matchView: MatchView = .init()
+        matchView.cardUID = cardUID
+        matchView.currentUser = user
         view.addSubview(matchView)
         matchView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -261,6 +274,11 @@ class HomeController: UIViewController {
         let navController: UINavigationController = .init(rootViewController: settingsController)
         navController.modalPresentationStyle = .fullScreen
         present(navController, animated: true, completion: nil)
+    }
+
+    @objc func handleMessages() {
+        let vc: MatchesMessagesController = .init()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

@@ -136,7 +136,7 @@ class RegistrationController: UIViewController {
         loginButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(view.snp.bottomMargin)
+            $0.bottom.equalTo(view.snp.bottomMargin).inset(16)
         }
     }
 
@@ -224,8 +224,7 @@ class RegistrationController: UIViewController {
     }
 
     @objc func handleGoToLogin() {
-        let loginController: LoginController = .init()
-        navigationController?.pushViewController(loginController, animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }
 
