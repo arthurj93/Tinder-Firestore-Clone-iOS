@@ -23,11 +23,6 @@ class CardView: UIView {
 
     var cardViewModel: CardViewModel! {
         didSet {
-
-//            let imageName = cardViewModel.imageUrls.first ?? ""
-//            if let url = URL(string: imageName) {
-//                imageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "photo_placeholder"), options: .continueInBackground)
-//            }
             swipingPhotoController.cardViewModel = self.cardViewModel
             informationLabel.attributedText = cardViewModel.attributedString
             informationLabel.textAlignment = cardViewModel.textAlignment
@@ -45,7 +40,6 @@ class CardView: UIView {
 
     var imageIndex = 0
     let barDeselectedColor: UIColor = .init(white: 0, alpha: 0.1)
-//    private let imageView = UIImageView(image:  #imageLiteral(resourceName: "photo_placeholder"))
     private let swipingPhotoController: SwipingPhotosController = .init(transitionStyle: .scroll, navigationOrientation: .horizontal)
     private let gradientLayer: CAGradientLayer = .init()
     private let informationLabel = UILabel()
@@ -72,9 +66,6 @@ class CardView: UIView {
 
     fileprivate func setupImageIndexObserver() {
         cardViewModel.imageIndexObserver = { [weak self] (index, imageUrl) in
-            if let url = URL(string: imageUrl ?? "") {
-//                self?.imageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "photo_placeholder"), options: .continueInBackground)
-            }
             self?.barsStackView.arrangedSubviews.forEach { v in
                 v.backgroundColor = self?.barDeselectedColor
             }
@@ -88,11 +79,9 @@ class CardView: UIView {
         clipsToBounds = true
 
         addSubview(swipingPhotosView)
-//        imageView.contentMode = .scaleAspectFill
         swipingPhotosView.snp.makeConstraints {
             $0.top.trailing.bottom.leading.equalToSuperview()
         }
-//        setupBarsStackView()
         setupGradientLayer()
 
         addSubview(informationLabel)

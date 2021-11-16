@@ -7,9 +7,16 @@
 
 import UIKit
 import FirebaseFirestore
+
+protocol MatchViewDelegate: class {
+    func goToMatchMessages(match: Match)
+}
 class MatchView: UIView {
 
     var currentUser: User!
+    var match: Match?
+    
+    weak var delegate: MatchViewDelegate?
 
     var cardUID: String! {
         didSet {
@@ -30,6 +37,8 @@ class MatchView: UIView {
                     self.setupAnimations()
                 }
                 self.descriptionLabel.text = "You and \(user.name ?? "") have liked\neach other."
+                let matchDictionary: [String: Any] = ["name": user.name ?? "", "profileImageUrl": user.imageUrl1 ?? "", "uid": user.uid ?? ""]
+                self.match = .init(dictionary: matchDictionary)
             }
         }
     }
@@ -73,13 +82,21 @@ class MatchView: UIView {
         let button: SendMessageButton = .init(type: .system)
         button.setTitle("SEND MESSAGE", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(handleMessageMatch), for: .touchUpInside)
         return button
     }()
+    
+    @objc func handleMessageMatch() {
+        guard let match = match else { return }
+        self.handleDismiss()
+        delegate?.goToMatchMessages(match: match)
+    }
 
     let keepSwipingButton: KeepSwipingButton = {
         let button: KeepSwipingButton = .init(type: .system)
         button.setTitle("Keep Swiping", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
         return button
     }()
 
@@ -89,7 +106,6 @@ class MatchView: UIView {
         super.init(frame: frame)
         setupBlurView()
         setupLayout()
-//        setupAnimations()
     }
 
     required init?(coder: NSCoder) {
@@ -189,8 +205,6 @@ class MatchView: UIView {
             UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4) {
                 self.currentUserImageView.transform = .identity
                 self.cardUserImageView.transform = .identity
-//                self.sendMessageButton.transform = .identity
-//                self.keepSwipingButton.transform = .identity
             }
 
         } completion: { (_) in
@@ -203,14 +217,6 @@ class MatchView: UIView {
         } completion: { _ in
 
         }
-
-//        UIView.animate(withDuration: 0.7) {
-//            self.currentUserImageView.transform = .identity
-//            self.currentUserImageView.transform = .identity
-//        } completion: { (_) in
-//
-//        }
-
     }
 
     @objc func handleDismiss() {

@@ -88,7 +88,6 @@ class HomeController: UIViewController {
             }
             self.user = user
             self.fetchSwipes()
-//            self.fetchUsersFromFirestore()
         }
     }
 
@@ -100,8 +99,6 @@ class HomeController: UIViewController {
                 return
             }
 
-            //use if let and put fetch users outside or if you dont have any swipes it wont fetch users
-//            guard let data = snapshot?.data() as? [String: Int] else { return }
             if let data = snapshot?.data() as? [String: Int] {
                 self.swipes = data
             }
@@ -127,8 +124,9 @@ class HomeController: UIViewController {
                 let user = User(dictionary: userDictionary)
                 self.users[user.uid ?? ""] = user
                 let isNotCurrentUser = user.uid != Auth.auth().currentUser?.uid
-                let hasNotSwipedBefore = true
-//                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
+                //For testing keep hasNotSwipedBefore true
+//                let hasNotSwipedBefore = true
+                let hasNotSwipedBefore = self.swipes[user.uid!] == nil
                 if isNotCurrentUser && hasNotSwipedBefore {
                     self.lastFetchedUser = user
                     let cardView = self.setupCardFromUser(user: user)
@@ -204,7 +202,8 @@ class HomeController: UIViewController {
                 }
 
                 guard let currentUser = self.user else { return }
-                let otherMatchdata = ["name": currentUser.name ?? "", "profileImageUrl": currentUser.imageUrl1 ?? "", "uid": cardUID, "timestamp": Date()] as [String : Any]
+                let otherMatchdata = ["name": currentUser.name ?? "", "profileImageUrl": currentUser.imageUrl1 ?? "", "uid": currentUser.uid
+                                      ?? "", "timestamp": Date()] as [String : Any]
                 Firestore.firestore().collection("matches_messages").document(cardUID).collection("matches").document(uid).setData(otherMatchdata) { (err) in
                     if let err = err {
                         print("Failed to save match info:", err)
@@ -221,6 +220,7 @@ class HomeController: UIViewController {
         let matchView: MatchView = .init()
         matchView.cardUID = cardUID
         matchView.currentUser = user
+        matchView.delegate = self
         view.addSubview(matchView)
         matchView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -309,4 +309,12 @@ extension HomeController: CardViewDelegate {
         self.topCardView = self.topCardView?.nextCardView
     }
 
+}
+
+extension HomeController: MatchViewDelegate {
+    func goToMatchMessages(match: Match) {
+        let chatLogController: ChatLogController = .init(match: match)
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
+    
 }

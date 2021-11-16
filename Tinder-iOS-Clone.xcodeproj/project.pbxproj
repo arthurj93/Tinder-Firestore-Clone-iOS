@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A00D97D2742F756000AE2F2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D97C2742F756000AE2F2 /* Message.swift */; };
+		5A00D97F2742F772000AE2F2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D97E2742F772000AE2F2 /* MessageCell.swift */; };
+		5A00D98127430005000AE2F2 /* CustomInputAcessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98027430005000AE2F2 /* CustomInputAcessoryView.swift */; };
+		5A00D98327430A16000AE2F2 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98227430A16000AE2F2 /* Match.swift */; };
+		5A00D98527430A8A000AE2F2 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98427430A8A000AE2F2 /* MatchCell.swift */; };
+		5A00D98727431201000AE2F2 /* MatchesHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98627431201000AE2F2 /* MatchesHeader.swift */; };
+		5A00D98927431235000AE2F2 /* MatchesHorizontalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98827431235000AE2F2 /* MatchesHorizontalController.swift */; };
+		5A00D98B27440E09000AE2F2 /* RecentMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98A27440E09000AE2F2 /* RecentMessageCell.swift */; };
+		5A00D98D27440E4E000AE2F2 /* RecentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A00D98C27440E4E000AE2F2 /* RecentMessage.swift */; };
 		5A3334D22626079500ED7480 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3334D12626079500ED7480 /* AppDelegate.swift */; };
 		5A3334D42626079500ED7480 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3334D32626079500ED7480 /* SceneDelegate.swift */; };
 		5A3334DB2626079700ED7480 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A3334DA2626079700ED7480 /* Assets.xcassets */; };
@@ -45,6 +54,15 @@
 /* Begin PBXFileReference section */
 		4881A4E709A045FDCDFDB502 /* Pods_Tinder_iOS_Clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tinder_iOS_Clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB6D5200FB6E7DBBC1DF0B2 /* Pods-Tinder-iOS-Clone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tinder-iOS-Clone.release.xcconfig"; path = "Target Support Files/Pods-Tinder-iOS-Clone/Pods-Tinder-iOS-Clone.release.xcconfig"; sourceTree = "<group>"; };
+		5A00D97C2742F756000AE2F2 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		5A00D97E2742F772000AE2F2 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		5A00D98027430005000AE2F2 /* CustomInputAcessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInputAcessoryView.swift; sourceTree = "<group>"; };
+		5A00D98227430A16000AE2F2 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		5A00D98427430A8A000AE2F2 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
+		5A00D98627431201000AE2F2 /* MatchesHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesHeader.swift; sourceTree = "<group>"; };
+		5A00D98827431235000AE2F2 /* MatchesHorizontalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesHorizontalController.swift; sourceTree = "<group>"; };
+		5A00D98A27440E09000AE2F2 /* RecentMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessageCell.swift; sourceTree = "<group>"; };
+		5A00D98C27440E4E000AE2F2 /* RecentMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMessage.swift; sourceTree = "<group>"; };
 		5A3334CE2626079500ED7480 /* Tinder-iOS-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-iOS-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3334D12626079500ED7480 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5A3334D32626079500ED7480 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -151,7 +169,6 @@
 				5A3E7044269B43DD00A0A229 /* MatchView.swift */,
 				5A3E7047269B571D00A0A229 /* SendMessageButton.swift */,
 				5A3E704A269B594C00A0A229 /* KeepSwipingButton.swift */,
-				5A61EB1526E83F9900DC0B98 /* MatchesNavBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -175,6 +192,9 @@
 			children = (
 				5A3EFA2926265A1F00D506C1 /* User.swift */,
 				5A3EFA852628B15400D506C1 /* Advertiser.swift */,
+				5A00D97C2742F756000AE2F2 /* Message.swift */,
+				5A00D98227430A16000AE2F2 /* Match.swift */,
+				5A00D98C27440E4E000AE2F2 /* RecentMessage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -193,6 +213,7 @@
 			children = (
 				5A61EB1226E8389000DC0B98 /* MatchesMessagesController.swift */,
 				5AE3F11326FA9A2900BCF6DF /* ChatLogController.swift */,
+				5A00D98827431235000AE2F2 /* MatchesHorizontalController.swift */,
 			);
 			path = MatchesMessages;
 			sourceTree = "<group>";
@@ -219,7 +240,13 @@
 		5AE3F11626FAA59000BCF6DF /* MatchesMessages */ = {
 			isa = PBXGroup;
 			children = (
+				5A61EB1526E83F9900DC0B98 /* MatchesNavBar.swift */,
 				5AE3F11726FAA5BF00BCF6DF /* MessagesNavBar.swift */,
+				5A00D97E2742F772000AE2F2 /* MessageCell.swift */,
+				5A00D98427430A8A000AE2F2 /* MatchCell.swift */,
+				5A00D98627431201000AE2F2 /* MatchesHeader.swift */,
+				5A00D98027430005000AE2F2 /* CustomInputAcessoryView.swift */,
+				5A00D98A27440E09000AE2F2 /* RecentMessageCell.swift */,
 			);
 			path = MatchesMessages;
 			sourceTree = "<group>";
@@ -362,9 +389,14 @@
 				5A3EFA1C2626539D00D506C1 /* HomeButtonsStackView.swift in Sources */,
 				5A3EFA862628B15400D506C1 /* Advertiser.swift in Sources */,
 				5A3EFA1D2626539D00D506C1 /* TopNavigationStackView.swift in Sources */,
+				5A00D98127430005000AE2F2 /* CustomInputAcessoryView.swift in Sources */,
+				5A00D98327430A16000AE2F2 /* Match.swift in Sources */,
+				5A00D97F2742F772000AE2F2 /* MessageCell.swift in Sources */,
 				5A8F37FA2697801B0057E6BE /* UserDetailsController.swift in Sources */,
 				5A3E704B269B594C00A0A229 /* KeepSwipingButton.swift in Sources */,
 				5A3E7045269B43DD00A0A229 /* MatchView.swift in Sources */,
+				5A00D98927431235000AE2F2 /* MatchesHorizontalController.swift in Sources */,
+				5A00D98527430A8A000AE2F2 /* MatchCell.swift in Sources */,
 				5A8F37942694EF400057E6BE /* AgeRangeCell.swift in Sources */,
 				5A3EFA322626910F00D506C1 /* CardViewModel.swift in Sources */,
 				5A3334D22626079500ED7480 /* AppDelegate.swift in Sources */,
@@ -372,17 +404,21 @@
 				5A61EB1626E83F9900DC0B98 /* MatchesNavBar.swift in Sources */,
 				5A3EFA2A26265A1F00D506C1 /* User.swift in Sources */,
 				5A8F378C2693A56A0057E6BE /* SettingsController.swift in Sources */,
+				5A00D98D27440E4E000AE2F2 /* RecentMessage.swift in Sources */,
 				5A3334D42626079500ED7480 /* SceneDelegate.swift in Sources */,
 				5A8F37F426963F9A0057E6BE /* LoginController.swift in Sources */,
 				5A3E0A26266DBEA100D506C1 /* RegistrationController.swift in Sources */,
 				5A3E6FF7269A154400A0A229 /* PhotoController.swift in Sources */,
 				5A8F37EE26962D7B0057E6BE /* FireBaseUtils+Extension.swift in Sources */,
 				5A3EFA1B2626539D00D506C1 /* CardView.swift in Sources */,
+				5A00D98727431201000AE2F2 /* MatchesHeader.swift in Sources */,
 				5A8F37F526963F9A0057E6BE /* LoginViewModel.swift in Sources */,
 				5AE3F11426FA9A2900BCF6DF /* ChatLogController.swift in Sources */,
 				5A3E7048269B571D00A0A229 /* SendMessageButton.swift in Sources */,
 				5A8F378F2693AD9D0057E6BE /* SettingsCell.swift in Sources */,
+				5A00D97D2742F756000AE2F2 /* Message.swift in Sources */,
 				5AE3F11826FAA5BF00BCF6DF /* MessagesNavBar.swift in Sources */,
+				5A00D98B27440E09000AE2F2 /* RecentMessageCell.swift in Sources */,
 				5A3E6FF42698E6BD00A0A229 /* SwipingPhotosController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

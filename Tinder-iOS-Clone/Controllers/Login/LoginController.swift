@@ -61,12 +61,12 @@ class LoginController: UIViewController {
         return sv
     }()
 
-    fileprivate let backButton: UIButton = {
+    fileprivate let goToLoginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Go to Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .heavy)
-        button.addTarget(self, action: #selector(handleBack), for: .touchUpInside)
+        button.addTarget(self, action: #selector(goToLogin), for: .touchUpInside)
         return button
     }()
 
@@ -104,8 +104,8 @@ class LoginController: UIViewController {
             $0.centerY.equalToSuperview()
         }
 
-        view.addSubview(backButton)
-        backButton.snp.makeConstraints {
+        view.addSubview(goToLoginButton)
+        goToLoginButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(view.snp_bottomMargin).inset(16)
         }
@@ -153,10 +153,9 @@ class LoginController: UIViewController {
         }
     }
 
-    @objc fileprivate func handleBack() {
+    @objc fileprivate func goToLogin() {
         let registerViewController: RegistrationController = .init()
         navigationController?.pushViewController(registerViewController, animated: true)
-//        navigationController?.popViewController(animated: true)
     }
 
 }

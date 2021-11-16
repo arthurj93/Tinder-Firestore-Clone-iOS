@@ -13,8 +13,6 @@ class UserDetailsController: UIViewController {
         didSet {
             infoLabel.attributedText = cardViewModel.attributedString
             swipingPhotosController.cardViewModel = cardViewModel
-//            guard let firstImageUrl = cardViewModel.imageUrls.first, let url = URL(string: firstImageUrl) else { return }
-//            imageView.sd_setImage(with: url)
         }
     }
     let extraSwipingHeight: CGFloat = 80
