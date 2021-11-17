@@ -39,7 +39,8 @@ extension Firestore {
                     "age": user.age ?? -1,
                     "profession": user.profession ?? "",
                     "minSeekingAge": user.minSeekingAge ?? 18,
-                    "maxSeekingAge": user.maxSeekingAge ?? 60
+                    "maxSeekingAge": user.maxSeekingAge ?? 60,
+                    "bio": user.bio ?? ""
                 ]
 
                 Firestore.firestore().collection("users").document(uid).setData(docData) { (err) in

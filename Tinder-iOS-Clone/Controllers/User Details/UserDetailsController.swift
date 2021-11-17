@@ -13,6 +13,7 @@ class UserDetailsController: UIViewController {
         didSet {
             infoLabel.attributedText = cardViewModel.attributedString
             swipingPhotosController.cardViewModel = cardViewModel
+            bioLabel.text = cardViewModel.bio
         }
     }
     let extraSwipingHeight: CGFloat = 80
@@ -29,6 +30,13 @@ class UserDetailsController: UIViewController {
     let infoLabel: UILabel = {
         let label: UILabel = .init()
         label.text = "User name 30\nDoctor\nbio text down below"
+        label.numberOfLines = 0
+        return label
+    }()
+    
+    let bioLabel: UILabel = {
+        let label: UILabel = .init()
+        label.text = "This is my bio"
         label.numberOfLines = 0
         return label
     }()
@@ -62,9 +70,15 @@ class UserDetailsController: UIViewController {
 
         scrollView.addSubview(swipingView)
         scrollView.addSubview(infoLabel)
+        scrollView.addSubview(bioLabel)
         infoLabel.snp.makeConstraints {
             $0.top.equalTo(swipingView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview().inset(16)
+        }
+        bioLabel.snp.makeConstraints {
+            $0.top.equalTo(infoLabel.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().inset(16)
+            $0.trailing.equalTo(view.snp.trailing).inset(16)
         }
         scrollView.addSubview(dismissButton)
         dismissButton.snp.makeConstraints {
@@ -127,6 +141,6 @@ extension UserDetailsController: UIScrollViewDelegate {
         var width = view.frame.width + changeY * 2
         width = max(view.frame.width, width)
         let swipingView = swipingPhotosController.view!
-        swipingView.frame = CGRect(x: min(0, -changeY), y: min(0, -changeY), width: width, height: width)
+        swipingView.frame = CGRect(x: min(0, -changeY), y: min(0, -changeY), width: width, height: width + extraSwipingHeight)
     }
 }

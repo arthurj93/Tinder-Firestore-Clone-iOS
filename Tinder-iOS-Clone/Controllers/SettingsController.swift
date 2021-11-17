@@ -201,6 +201,10 @@ class SettingsController: UITableViewController {
     @objc func handleAgeChange(textField: UITextField) {
         self.user?.age = Int(textField.text ?? "")
     }
+    
+    @objc func handleChangeBio(textField: UITextField) {
+        self.user?.bio = textField.text
+    }
 
 }
 
@@ -247,12 +251,17 @@ extension SettingsController {
             cell.textField.addTarget(self, action: #selector(handleProfessionChange), for: .editingChanged)
         case 3:
             cell.textField.placeholder = "Enter Age"
+            cell.textField.keyboardType = .numberPad
             cell.textField.addTarget(self, action: #selector(handleAgeChange), for: .editingChanged)
             if let age = user?.age {
                 cell.textField.text = "\(age)"
             }
         default:
             cell.textField.placeholder = "Enter Bio"
+            if let bio = user?.bio {
+                cell.textField.text = bio
+            }
+            cell.textField.addTarget(self, action: #selector(handleChangeBio), for: .editingChanged)
         }
         return cell
     }

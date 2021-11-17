@@ -191,6 +191,7 @@ class RegistrationController: UIViewController {
                 return
             }
             print("Finished register our user")
+            self?.handleGoToLogin()
         }
     }
 

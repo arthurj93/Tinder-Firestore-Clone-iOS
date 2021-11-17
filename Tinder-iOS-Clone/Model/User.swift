@@ -8,10 +8,10 @@
 import UIKit
 
 struct User: ProducesCardViewModel {
+
     var name: String?
     var age: Int?
     var profession: String?
-//    let imageNames: [String]
     var imageUrl1: String?
     var imageUrl2: String?
     var imageUrl3: String?
@@ -19,6 +19,7 @@ struct User: ProducesCardViewModel {
 
     var minSeekingAge: Int?
     var maxSeekingAge: Int?
+    var bio: String?
 
 
     init(dictionary: [String: Any]) {
@@ -31,6 +32,7 @@ struct User: ProducesCardViewModel {
         self.uid = dictionary["uid"] as? String ?? ""
         self.minSeekingAge = dictionary["minSeekingAge"] as? Int
         self.maxSeekingAge = dictionary["maxSeekingAge"] as? Int
+        self.bio = dictionary["bio"] as? String ?? ""
     }
     func toCardViewModel() -> CardViewModel {
         let attributedText = NSMutableAttributedString(string: name ?? "", attributes: [.font: UIFont.systemFont(ofSize: 32, weight: .heavy)])
@@ -43,6 +45,6 @@ struct User: ProducesCardViewModel {
         if let url = imageUrl1 { imageUrls.append(url) }
         if let url = imageUrl2 { imageUrls.append(url) }
         if let url = imageUrl3 { imageUrls.append(url) }
-        return .init(uid: self.uid ?? "", imageNames: imageUrls, attributedString: attributedText, textAlignment: .left)
+        return .init(uid: self.uid ?? "", imageNames: imageUrls, attributedString: attributedText, textAlignment: .left, bio: bio)
     }
 }
