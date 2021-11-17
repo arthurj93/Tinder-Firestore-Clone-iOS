@@ -39,5 +39,6 @@
  <p align="center"> 
  <img src="Tinder-iOS-Clone/AppScreens/match.png" width="300px" height="600">
  <img src="Tinder-iOS-Clone/AppScreens/matchMessage.png" width="300px" height="600"> 
- <img src="Tinder-iOS-Clone/AppScreens/messageChat.png" width="300px" height="600"> ˆ
+ <img src="Tinder-iOS-Clone/AppScreens/messageChat.png" width="300px" height="600">
+ <img src="Tinder-iOS-Clone/AppScreens/settings.png" width="300px" height="600">
  </p>
